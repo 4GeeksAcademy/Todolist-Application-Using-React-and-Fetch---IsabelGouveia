@@ -10,8 +10,3 @@ import Home from "./component/home.jsx";
 
 //render your react application
 ReactDOM.render(<Home />, document.querySelector("#app"));
-
-
-fetch('./todos.json')
-      .then(response => response.json())
-      .then(json => console.log(json))

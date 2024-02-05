@@ -1,112 +1,47 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
 
 const Home = () => {
-  // State variables for input text and todo list
-  const [inputText, setInputText] = useState("");
-  const [listTodo, setListTodo] = useState([]);
+  const [newItem, setNewItem] = useState("");
 
-  // UseEffect
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/todos')
-      .then(response => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-
-        return response.json();
-      })
-      .then(responseAsJson => {
-        setListTodo(responseAsJson.map(todo => todo.title));
-      })
-      .catch(error => {
-        console.log('Looks like there was a problem: \n', error);
-      });
-  }, [])
-
-
-  const addTodo = () => {
-    // Check if input text is not empty
-    if (inputText.trim() !== "") {
-      // Add input text to the todo list
-      setListTodo([...listTodo, inputText]);
-      // Clear the input text
-      setInputText("");
-    }
-
-    // Send POST request to API here
-    fetch('https://jsonplaceholder.typicode.com/todos', {
-      method: 'POST',
-      body: JSON.stringify({ name: inputText }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw Error(res.statusText);
-        return res.json();
-      })
-      .then(response => console.log('Success:', response))
-      .catch(error => console.error(error));
-  };
-
-  const deleteTodo = (index) => {
-    // Create a copy of the todo list
-    const updatedTodoList = [...listTodo];
-    // Remove the todo item at the specified index using splice
-    updatedTodoList.splice(index, 1);
-    // Update the state with the modified todo list
-    setListTodo(updatedTodoList);
-
-    // Send POST request to API here
-    fetch(`https://jsonplaceholder.typicode.com/comments/${index}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw Error(res.statusText);
-        return res.json();
-      })
-      .then(response => console.log('Success:', response))
-      .catch(error => console.error(error));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add your logic for handling the submitted item
+    console.log("Submitted item:", newItem);
   };
 
   return (
-    <div className="container">
-      {/* Heading */}
-      <h1>Todo List</h1>
-
-      {/* Todo list */}
-      <div className="input-box-container">
-        {/* Input field for adding new todos */}
-        <input
-          className="input-box"
-          type="text"
-          placeholder="Add item..."
-          value={inputText}
-          // Update the input text state when the value changes
-          onChange={(e) => setInputText(e.target.value)}
-        />
-
-        {/* Button for adding a new todo */}
-        <button onClick={addTodo}>Add</button>
-      </div>
-
-      <ul>
-        {/* Map over the list of todos */}
-        {listTodo.map((item, index) => (
-          // Each todo item is rendered as an <li> element with a unique key
-          <li key={index}>
-            {item}
-            <i className="fas fa-trash" onClick={() => deleteTodo(index)}></i>
+    <div className="todo-list">
+      <div className="title">
+        <h1>Todo List</h1>
+        <span>Get things done, one item at a time.</span>
+        <div className="todos-content">content
+          <li>
+            <div class="actions">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"/>
+                <label class="form-check-label" for="inlineCheckbox1">1</label>
+                <button class="btn-picto" type="button" aria-label="Delete" title="Delete">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
           </li>
-        ))}
-      </ul>
+        </div>
+        <div className="input-todo">
+          <form name="newform" onSubmit={handleSubmit}>
+            <label htmlFor="newitem">Add to the todo list</label>
+            <input
+              type="text"
+              name="newitem"
+              id="newitem"
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+            />
+            <button type="submit">Add</button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Home;
-
-
